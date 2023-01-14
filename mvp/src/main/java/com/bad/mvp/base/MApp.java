@@ -24,8 +24,6 @@ import okhttp3.OkHttpClient;
 public abstract class MApp extends MultiDexApplication {
 
     private static MApp instance;
-    private static String AppName = "com.mobi.cashday";
-    private static String VersionCode = "1.0.1";
 
     @Override
     public void onCreate() {
@@ -51,8 +49,6 @@ public abstract class MApp extends MultiDexApplication {
         Map<String, String> params = config.getParams();
         List<Interceptor> interceptors = config.getInterceptors();
         HttpHeaders httpHeaders = new HttpHeaders();
-        httpHeaders.put("pkgName", AppName);
-        httpHeaders.put("appVersion", VersionCode);
         builder.addCommonHeaders(httpHeaders);
         if (params != null && !params.keySet().isEmpty()) {
             HttpParams httpParams = new HttpParams();
