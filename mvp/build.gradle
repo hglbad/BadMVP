@@ -48,5 +48,10 @@ dependencies {
     api 'com.blankj:utilcodex:1.31.0'
     api 'com.android.support:multidex:1.0.3'
     api 'com.alibaba:fastjson:1.1.70.android'
+    //Retrofit
+    api 'com.squareup.retrofit2:retrofit:2.3.0'
+    api 'com.squareup.retrofit2:converter-gson:2.3.0'//ConverterFactory的Gson依赖包
+    api 'com.squareup.retrofit2:converter-scalars:2.3.0'//ConverterFactory的String依赖包
+    api("com.squareup.okhttp3:okhttp:4.9.1")
 
 }

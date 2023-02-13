@@ -11,17 +11,21 @@ import com.bad.mvp.BuildConfig;
 import com.blankj.utilcode.util.TimeUtils;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class UsageStatsUtil {
-    public static Long getForegroundAppL(Context context,long beginTime,long endTime,String pkgName) {
+    public static Long getForegroundAppL(Context context, long endTime, String pkgName) {
         UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-
-        List<UsageStats> usageStats = usageStatsManager.queryUsageStats(INTERVAL_DAILY, beginTime, endTime);
+        List<UsageStats> usageStats = usageStatsManager.queryUsageStats(INTERVAL_DAILY, endTime - (10 * 60 * 1000), endTime);
         if (usageStats == null) {
             return 0L;
         }
         UsageStats usageStats1 = null;
-        if (usageStats.stream().filter(n -> n.getPackageName().equals(pkgName) && TimeUtils.isToday(n.getLastTimeUsed())).findFirst().isPresent()) {
+        if (BuildConfig.DEBUG) {
+            List<UsageStats> collect = usageStats.stream().filter(n -> n.getPackageName().equals(pkgName)).collect(Collectors.toList());
+            Log.e("应用信息列表", ParseJsonUtil.toJson(collect));
+        }
+        if (usageStats.stream().anyMatch(n -> n.getPackageName().equals(pkgName) && TimeUtils.isToday(n.getLastTimeUsed()))) {
             usageStats1 = usageStats.stream().filter(n -> n.getPackageName().equals(pkgName) && TimeUtils.isToday(n.getLastTimeUsed())).findFirst().get();
         }
         if (usageStats1 == null) {
@@ -37,7 +41,6 @@ public class UsageStatsUtil {
             Log.e("UsageStats", "最后启动:" + JDateKit.timeToDate(fmt, usageStats1.getLastTimeStamp()));
             Log.e("UsageStats", "最近使用:" + JDateKit.timeToDate(fmt, usageStats1.getLastTimeUsed()));
         }
-
 
         return usageStats1.getTotalTimeInForeground();
     }
